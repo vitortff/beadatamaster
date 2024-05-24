@@ -42,3 +42,16 @@ SELECT
 FROM 
 	Employee
 FOR SYSTEM_TIME ALL
+
+--Adicionando uma nova coluna
+ALTER TABLE dbo.Employee ADD email VARCHAR(100) NULL
+
+--Identificando quem realizou a transação
+SELECT
+	t.[commit_time] AS [CommitTime], 
+	E.*,
+	t.principal_name
+ FROM dbo.Employee E
+ JOIN sys.database_ledger_transactions t
+ ON t.transaction_id = E.ledger_start_transaction_id
+ ORDER BY t.commit_time DESC;
